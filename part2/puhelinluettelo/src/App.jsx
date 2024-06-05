@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Filter, PersonForm, PersonsList } from './components/Person'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [currentFilter, setNewFilter] = useState('')
+  const [currentNotificationMessage, setNotification] = useState(null)
+  const [currentNotificationState, setSuccess] = useState(true)
 
   useEffect(() => {
     personService
@@ -34,6 +37,11 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
+        setNotification(`Added ${returnedPerson.name} succesfully`)
+        setSuccess(true)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
     }
   }
@@ -44,10 +52,14 @@ const App = () => {
       .deletePerson(person.id)
       .then(deletedPerson => {
         setPersons(persons.filter(person => person.id !== deletedPerson.id))
+        setNotification(`Deleted ${deletedPerson.name} succesfully`)
+        setSuccess(true)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
       .catch(error => {
-        console.log(error)
-        alert("Something went wrong with deleting a person")
+        setNotification(`Something went wrong when deleting ${person.name}`)
       })
     }
   }
@@ -59,10 +71,24 @@ const App = () => {
       .updateNumber(changedPerson)
       .then(updatedPerson => {
         setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
+        setNewName('')
+        setNewNumber('')
+
+        setNotification(`Updated ${updatedPerson.name}'s number to ${updatedPerson.number}`)
+        setSuccess(true)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
       .catch(error => {
-        console.log(error)
-        alert("Something went wrong with updating a number")
+        setNotification(`Information of ${person.name} has already been removed from server`)
+        setSuccess(false)
+        setPersons(persons.filter(p => p.name !== person.name))
+        setNewName('')
+        setNewNumber('')
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
     }
   }
@@ -74,6 +100,9 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={currentNotificationMessage} success={currentNotificationState} />
+
       <Filter current={currentFilter} changeFn={handleFilterChange}/>
       <h2>Add new:</h2>
       <PersonForm 
