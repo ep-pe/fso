@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Country from "./components/Country"
+import CountryList from "./components/CountryList"
 
-const Display = ({ countryList }) => {
+const Display = ({ countryList, setCountries, setValue }) => {
   console.log(countryList)
   if(countryList.length > 10) {
     return (
@@ -18,25 +20,10 @@ const Display = ({ countryList }) => {
   } else if(countryList.length == 1) {
     const c = countryList[0]
     return (
-      <div>
-        <h1>{c.name["common"]}</h1>
-        <div>
-          capital {c.capital}<br/>
-          area {c.area}
-        </div>
-        <b>languages:</b>
-        <ul>
-        </ul>
-      </div>
+      <Country country={c}/>
     )
   } else {
-    return (
-      <>
-        {countryList.map(c => c.name["common"])
-          .map(name => <div>{name}</div>)
-        }
-      </>
-    )
+    return <CountryList countries={countryList} setCountries={setCountries} setValue={setValue}/>
   }
 }
 
@@ -50,7 +37,7 @@ const App = () => {
       .get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
       .then(response => {
         setCountries(
-          response.data.filter(c => c.name["common"].toLowerCase().startsWith(value.toLowerCase()))
+          response.data.filter(c => c.name["common"].toLowerCase().includes(value.toLowerCase()))
         )
       })
   }, [value])
@@ -67,7 +54,7 @@ const App = () => {
         Find countries <input value={value} onChange={handleChange} />
       </form>
       <div>
-        <Display countryList={countries}/>
+        <Display countryList={countries} setCountries={setCountries} setValue={setValue}/>
       </div>
     </div>
   )
