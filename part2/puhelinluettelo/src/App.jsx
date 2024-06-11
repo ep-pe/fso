@@ -43,6 +43,14 @@ const App = () => {
           setNotification(null)
         }, 3000)
       })
+      .catch(error => {
+        console.log(error.response.data)
+        setNotification(error.response.data.error)
+        setSuccess(false)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
+      })
     }
   }
 
@@ -60,6 +68,10 @@ const App = () => {
       })
       .catch(error => {
         setNotification(`Something went wrong when deleting ${person.name}`)
+        setSuccess(false)
+        setTimeout(() => {
+          setNotification(null)
+        }, 3000)
       })
     }
   }
@@ -81,11 +93,9 @@ const App = () => {
         }, 3000)
       })
       .catch(error => {
-        setNotification(`Information of ${person.name} has already been removed from server`)
+        console.log(error.response.data)
+        setNotification(error.response.data.error)
         setSuccess(false)
-        setPersons(persons.filter(p => p.name !== person.name))
-        setNewName('')
-        setNewNumber('')
         setTimeout(() => {
           setNotification(null)
         }, 3000)
