@@ -46,7 +46,7 @@ test('a valid blog can be added', async () => {
     assert(contents.includes('testblogtitle'))
 })
 
-test.only('a blog without likes will default to 0', async () => {
+test('a blog without likes will default to 0', async () => {
     const newBlog = {
         title: 'testblogtitle',
     }
@@ -59,6 +59,15 @@ test.only('a blog without likes will default to 0', async () => {
     const response = await api.get('/api/blogs')
     const blog = response.body.find(r => r.title === 'testblogtitle')
     assert.strictEqual(blog.likes, 0)
+})
+
+test.only('a blog without title and url will return 400', async () => {
+    const newBlog = {
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
 })
 
 after(async () => {
