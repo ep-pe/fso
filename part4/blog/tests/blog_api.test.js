@@ -70,7 +70,7 @@ test('a blog without title and url will return 400', async () => {
         .expect(400)
 })
 
-test.only('a blog can be deleted', async () => {
+test('a blog can be deleted', async () => {
     const response = await api.get('/api/blogs')
     const blogToDelete = response.body[0]
     await api
@@ -79,6 +79,23 @@ test.only('a blog can be deleted', async () => {
     
     const blogsAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+})
+
+test.only('a blog can be updated', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToUpdate = response.body[0]
+    const updatedBlog = {
+        likes: 1000
+    }
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlogInDb = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+    assert.strictEqual(updatedBlogInDb.likes, 1000)
+    assert.strictEqual(updatedBlogInDb.title, blogToUpdate.title)
 })
 
 after(async () => {
