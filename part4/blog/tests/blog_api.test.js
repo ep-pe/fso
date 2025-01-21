@@ -61,13 +61,24 @@ test('a blog without likes will default to 0', async () => {
     assert.strictEqual(blog.likes, 0)
 })
 
-test.only('a blog without title and url will return 400', async () => {
+test('a blog without title and url will return 400', async () => {
     const newBlog = {
     }
     await api
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
+})
+
+test.only('a blog can be deleted', async () => {
+    const response = await api.get('/api/blogs')
+    const blogToDelete = response.body[0]
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 })
 
 after(async () => {
