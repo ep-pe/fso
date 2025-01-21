@@ -29,7 +29,7 @@ test('field id is defined', async () => {
     })
 })
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
     const newBlog = {
         title: 'testblogtitle'
     }
@@ -44,6 +44,21 @@ test.only('a valid blog can be added', async () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
     console.log(response.body)
     assert(contents.includes('testblogtitle'))
+})
+
+test.only('a blog without likes will default to 0', async () => {
+    const newBlog = {
+        title: 'testblogtitle',
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const response = await api.get('/api/blogs')
+    const blog = response.body.find(r => r.title === 'testblogtitle')
+    assert.strictEqual(blog.likes, 0)
 })
 
 after(async () => {
