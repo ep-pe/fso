@@ -13,14 +13,14 @@ beforeEach(async () => {
     await Blog.insertMany(helper.initialBlogs)
 })
 
-test.only('blogs are returned as json', async () => {
+test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/)
 })
 
-test.only('field id is defined', async () => {
+test('field id is defined', async () => {
     const response = await api.get('/api/blogs')
     const ids = response.body.map(r => r.id)
     console.log(ids)
@@ -29,6 +29,22 @@ test.only('field id is defined', async () => {
     })
 })
 
+test.only('a valid blog can be added', async () => {
+    const newBlog = {
+        title: 'testblogtitle'
+    }
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const response = await api.get('/api/blogs')
+    const contents = response.body.map(r => r.title)
+    assert.strictEqual(response.body.length, helper.initialBlogs.length + 1)
+    console.log(response.body)
+    assert(contents.includes('testblogtitle'))
+})
 
 after(async () => {
     await mongoose.connection.close()
