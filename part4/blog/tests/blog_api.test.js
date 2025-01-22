@@ -81,7 +81,7 @@ test('a blog can be deleted', async () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 })
 
-test.only('a blog can be updated', async () => {
+test('a blog can be updated', async () => {
     const response = await api.get('/api/blogs')
     const blogToUpdate = response.body[0]
     const updatedBlog = {
