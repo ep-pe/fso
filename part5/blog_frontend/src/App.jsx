@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Bloglist from './components/Bloglist'
+import LoginForm from './components/LoginForm'
+import UserDetails from './components/UserDetails'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -16,12 +18,26 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({
         username, password,
       })
+
+      window.localStorage.setItem(
+        'loggedBlogappUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -33,48 +49,22 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <h2>Login</h2>
-        Username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        Password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">Login</button>
-    </form>
-  )
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    setUser(null)
+    window.localStorage.removeItem('loggedBlogappUser')
+  }
 
-  const blogForm = () => (
-    <div>
-      <h2>Blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-    </div>
-  )
 
 
   return (
     <div>
-      {!user && loginForm()}
-      {user && <div>
-        <p style={{fontStyle: 'italic'}}>Logged in as {user.name}</p>
-        {blogForm()}
-        </div>
+      {!user && LoginForm({ handleLogin, username, password, setUsername, setPassword })}
+      {user &&
+        <>
+        {UserDetails({ user, handleLogout })}
+        {Bloglist({ blogs })}
+        </>
       }
       
     </div>
