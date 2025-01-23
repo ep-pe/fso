@@ -38,3 +38,8 @@ h1 {
     font-style: italic;
     text-align: center;
   }
+
+  .blog {
+    background: rgb(216, 226, 238);
+    margin-bottom: 5px;
+  }
