@@ -20,13 +20,13 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  
+
   const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -80,12 +80,12 @@ const App = () => {
     setBlogs(blogs.concat(returnedBlog))
     setNotificationMessage(`A new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     setTimeout(() => {
-    setNotificationMessage(null)
+      setNotificationMessage(null)
     }, 3000)
   }
 
   const updateBlog = async (blogId, newObject) => {
-    try {   
+    try {
       const updatedBlog = await blogService.update(blogId, newObject)
       setBlogs(blogs.map(blog => blog.id !== blogId ? blog : updatedBlog))
     } catch (err) {
@@ -119,20 +119,20 @@ const App = () => {
       {!user && LoginForm({ handleLogin, username, password, setUsername, setPassword })}
       {user &&
         <>
-        <UserDetails user={user} handleLogout={handleLogout} />
-        <h2>Blogs</h2>
-        <Togglable buttonLabel='Add blog' ref={blogFormRef}>
-          <BlogForm createBlog={addBlog} />
-        </Togglable>
-        <div>
+          <UserDetails user={user} handleLogout={handleLogout} />
+          <h2>Blogs</h2>
+          <Togglable buttonLabel='Add blog' ref={blogFormRef}>
+            <BlogForm createBlog={addBlog} />
+          </Togglable>
+          <div>
             {blogs
               .map(blog => <Blog key={blog.id} blog={blog} updateFunction={updateBlog} deleteFunction={deleteBlog} username={user.username} />)
               .sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
-        </div>
-        <Footer />
+          </div>
+          <Footer />
         </>
       }
-      
+
     </div>
   )
 }

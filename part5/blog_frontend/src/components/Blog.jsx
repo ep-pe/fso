@@ -18,16 +18,16 @@ const Blog = ({ blog, updateFunction, deleteFunction, username }) => {
   }
 
   return (
-      <div className="blog">
-        {blog.title} {blog.author} <button onClick={() => toggleExpanded()}>{expanded ? 'hide' : 'view'}</button>
-        <div className="blog" style={showWhenExpanded}>
-          <div>{blog.url}</div>
-          <div>{blog.likes} likes <button onClick={() => addLike()}>like</button></div>
-          <div>{blog.user ? blog.user.name : ''}</div>
-          {username === blog.user.username && <button onClick={() => deleteFunction(blog.id)}>Remove</button>}
-        </div>
+    <div className="blog">
+      {blog.title} {blog.author} <button onClick={() => toggleExpanded()}>{expanded ? 'hide' : 'view'}</button>
+      <div className="blog" style={showWhenExpanded}>
+        <div>{blog.url}</div>
+        <div>{blog.likes} likes <button onClick={() => addLike()}>like</button></div>
+        <div>{blog.user ? blog.user.name : ''}</div>
+        {username === blog.user.username || username === 'admin' && <button onClick={() => deleteFunction(blog.id)}>Remove</button>}
       </div>
-  )  
+    </div>
+  )
 }
 
 export default Blog
