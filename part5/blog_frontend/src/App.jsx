@@ -96,6 +96,21 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blogId) => {
+    try {
+      if(window.confirm(`Do you really want to delete ${blogs.find(blog => blog.id === blogId).title}?`))
+      {
+        await blogService.remove(blogId)
+        setBlogs(blogs.filter(blog => blog.id !== blogId))
+      }
+    } catch (err) {
+      setErrorMessage(`Error deleting blog: ${err}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    }
+  }
+
   return (
     <div>
       {Banner()}
@@ -111,7 +126,7 @@ const App = () => {
         </Togglable>
         <div>
             {blogs
-              .map(blog => <Blog key={blog.id} blog={blog} updateFunction={updateBlog} />)
+              .map(blog => <Blog key={blog.id} blog={blog} updateFunction={updateBlog} deleteFunction={deleteBlog} username={user.username} />)
               .sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
         </div>
         <Footer />

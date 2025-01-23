@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateFunction }) => {
+const Blog = ({ blog, updateFunction, deleteFunction, username }) => {
   const [expanded, setExpanded] = useState(false)
   const showWhenExpanded = { display: expanded ? '' : 'none' }
 
@@ -24,6 +24,7 @@ const Blog = ({ blog, updateFunction }) => {
           <div>{blog.url}</div>
           <div>{blog.likes} likes <button onClick={() => addLike()}>like</button></div>
           <div>{blog.user ? blog.user.name : ''}</div>
+          {username === blog.user.username && <button onClick={() => deleteFunction(blog.id)}>Remove</button>}
         </div>
       </div>
   )  
