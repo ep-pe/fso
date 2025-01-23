@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Banner from './components/Banner'
 import Bloglist from './components/Bloglist'
 import LoginForm from './components/LoginForm'
 import UserDetails from './components/UserDetails'
@@ -92,6 +93,7 @@ const App = () => {
 
   return (
     <div>
+      {Banner()}
       <Notification message={errorMessage} isError={true} />
       <Notification message={notificationMessage} isError={false} />
       {!user && LoginForm({ handleLogin, username, password, setUsername, setPassword })}
