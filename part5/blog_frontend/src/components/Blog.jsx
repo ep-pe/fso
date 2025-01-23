@@ -13,7 +13,7 @@ const Blog = ({ blog, updateFunction }) => {
     updateFunction(blog.id, {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id
+      user: blog.user
     })
   }
 
