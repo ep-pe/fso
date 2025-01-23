@@ -3,11 +3,9 @@
   color: white;
   width: 100vw;
   padding-left: 10px;
-  margin-left: 0px;
+  margin-left: -10px;
   margin-right: -10px;
-  position: absolute;
-  top: 0;
-  left: 0;
+  margin-top: -16px;
 }
 
 h1 {
@@ -33,4 +31,10 @@ h1 {
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
+  }
+
+  .footer {
+    color: navy;
+    font-style: italic;
+    text-align: center;
   }

@@ -1,14 +1,9 @@
 const Footer = () => {
-    const footerStyle = {
-      color: 'navy',
-      fontStyle: 'italic',
-      fontSize: 16
-    }
-  
+
     return (
-      <div style={footerStyle}>
+      <div className="footer">
         <br />
-        <em>Blog app, Elias Peltokangas 2025</em>
+        <em>blog app by elias peltokangas</em>
       </div>
     )
   }
