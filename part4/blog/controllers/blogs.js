@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken')
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
-  console.log(request.user)
 })
 
 blogsRouter.post('/', async (request, response) => {
@@ -28,6 +27,9 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user
+  if(!user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
 
   const blog = await Blog.findById(request.params.id)
   if(!blog) {

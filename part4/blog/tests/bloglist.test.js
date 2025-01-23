@@ -1,7 +1,8 @@
-const { test, describe } = require('node:test')
+const { test, after, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 const helper = require('./test_helper')
+const mongoose = require('mongoose')
 
 test('dummy returns one', () => {
   const blogs = []
@@ -22,7 +23,7 @@ describe('total likes', () => {
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = listHelper.totalLikes(helper.blogs)
+        const result = listHelper.totalLikes(helper.initialBlogs)
         assert.strictEqual(result, 36)
     })
 
@@ -40,8 +41,8 @@ describe('favorite blog', () => {
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = listHelper.favoriteBlog(helper.blogs)
-        assert.deepStrictEqual(result, helper.blogs[2])
+        const result = listHelper.favoriteBlog(helper.initialBlogs)
+        assert.deepStrictEqual(result, helper.initialBlogs[2])
     })
 })
 
@@ -57,7 +58,7 @@ describe('most blogs', () => {
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = listHelper.mostBlogs(helper.blogs)
+        const result = listHelper.mostBlogs(helper.initialBlogs)
         assert.deepStrictEqual(result, 'Robert C. Martin')
     })
 })
@@ -74,7 +75,11 @@ describe('most likes', () => {
     })
 
     test('of a bigger list is calculated right', () => {
-        const result = listHelper.mostLikes(helper.blogs)
+        const result = listHelper.mostLikes(helper.initialBlogs)
         assert.deepStrictEqual(result, 'Edsger W. Dijkstra')
     })
+})
+
+after(async () => {
+    await mongoose.connection.close()
 })

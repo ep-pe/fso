@@ -1,5 +1,7 @@
+const { init } = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 const listWithOneBlog = [
     {
@@ -63,6 +65,17 @@ const listWithOneBlog = [
       }  
     ]
 
+const initialUser = {
+  username: 'initialtestuser',
+  password: 'sekret'
+}
+
+const newBlog = {
+  title: 'testblogtitle',
+  author: 'testblogauthor',
+  url: 'testblogurl.com',
+}
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
@@ -73,6 +86,22 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+const addInitialUser = async () => {
+  const passwordHash = await bcrypt.hash(initialUser.password, 10)
+  const user = new User({ username: initialUser.username, passwordHash })
+  await user.save()
+}
+
+const getAuthorization = async (api) => {
+  const response = await api
+    .post('/api/login')
+    .send(initialUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  const auth = `Bearer ${response.body.token}`
+  return auth
+}
+
 module.exports = {
-    listWithOneBlog, initialBlogs, blogsInDb, usersInDb
+    listWithOneBlog, initialBlogs, initialUser, newBlog, blogsInDb, usersInDb, addInitialUser, getAuthorization
 }
