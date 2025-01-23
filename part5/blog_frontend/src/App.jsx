@@ -10,6 +10,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -55,16 +58,29 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogappUser')
   }
 
+  const createBlog = async (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: title,
+      author: author,
+      url: url
+    }
+    await blogService.create(blogObject)
+    setBlogs(blogs.concat(blogObject))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
 
   return (
     <div>
       {!user && LoginForm({ handleLogin, username, password, setUsername, setPassword })}
       {user &&
-        <>
+        <div>
         {UserDetails({ user, handleLogout })}
-        {Bloglist({ blogs })}
-        </>
+        {Bloglist({ blogs, author, setAuthor, title, setTitle, url, setUrl, createBlog })}
+        </div>
       }
       
     </div>
