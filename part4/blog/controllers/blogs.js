@@ -21,7 +21,7 @@ if(!decodedToken.id) {
   return response.status(401).json({ error: 'token missing or invalid' })
 }
 
-const user = request.user
+const user = await User.findById(decodedToken.id)
 blog.user = user._id
 
 const savedBlog = await blog.save()
