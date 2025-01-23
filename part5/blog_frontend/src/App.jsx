@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react'
 import Bloglist from './components/Bloglist'
 import LoginForm from './components/LoginForm'
 import UserDetails from './components/UserDetails'
+import Footer from './components/Footer'
+import Notification from './components/Notification'
+
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [title, setTitle] = useState('')
@@ -44,11 +49,15 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotificationMessage(`Welcome ${user.name}`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 3000)
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      setErrorMessage('Wrong credentials')
       setTimeout(() => {
         setErrorMessage(null)
-      }, 5000)
+      }, 3000)
     }
   }
 
@@ -56,6 +65,10 @@ const App = () => {
     event.preventDefault()
     setUser(null)
     window.localStorage.removeItem('loggedBlogappUser')
+    setNotificationMessage('Logout successful')
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 3000)
   }
 
   const createBlog = async (event) => {
@@ -70,17 +83,24 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    setNotificationMessage(`A new blog ${title} by ${author} added`)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 3000)
   }
 
 
   return (
     <div>
+      <Notification message={errorMessage} isError={true} />
+      <Notification message={notificationMessage} isError={false} />
       {!user && LoginForm({ handleLogin, username, password, setUsername, setPassword })}
       {user &&
-        <div>
+        <>
         {UserDetails({ user, handleLogout })}
         {Bloglist({ blogs, author, setAuthor, title, setTitle, url, setUrl, createBlog })}
-        </div>
+        {Footer()}
+        </>
       }
       
     </div>
