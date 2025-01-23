@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Banner from './components/Banner'
 import Bloglist from './components/Bloglist'
+import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import UserDetails from './components/UserDetails'
@@ -11,7 +12,6 @@ import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
-import Blog from './components/Blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -82,7 +82,19 @@ const App = () => {
     setTimeout(() => {
     setNotificationMessage(null)
     }, 3000)
-}   
+  }
+
+  const updateBlog = async (blogId, newObject) => {
+    try {   
+      const updatedBlog = await blogService.update(blogId, newObject)
+      setBlogs(blogs.map(blog => blog.id !== blogId ? blog : updatedBlog))
+    } catch (err) {
+      setErrorMessage(`Error updating blog: ${err}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 3000)
+    }
+  }
 
   return (
     <div>
@@ -93,10 +105,15 @@ const App = () => {
       {user &&
         <>
         <UserDetails user={user} handleLogout={handleLogout} />
+        <h2>Blogs</h2>
         <Togglable buttonLabel='Add blog' ref={blogFormRef}>
           <BlogForm createBlog={addBlog} />
         </Togglable>
-        <Bloglist blogs={blogs} />
+        <div>
+            {blogs.map(blog =>
+                <Blog key={blog.id} blog={blog} updateFunction={updateBlog} />
+            )}
+        </div>
         <Footer />
         </>
       }
