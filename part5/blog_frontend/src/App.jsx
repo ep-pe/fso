@@ -128,10 +128,9 @@ const App = () => {
               .map(blog => <Blog key={blog.id} blog={blog} updateFunction={updateBlog} deleteFunction={deleteBlog} username={user.username} />)
               .sort((a, b) => b.props.blog.likes - a.props.blog.likes)}
           </div>
-          <Footer />
         </>
       }
-
+      <Footer />
     </div>
   )
 }

@@ -29,7 +29,7 @@ const Blog = ({ blog, updateFunction, deleteFunction, username }) => {
       {expanded && (
         <div className="blog" style={showWhenExpanded} >
           <div>{blog.url}</div>
-          <div><span>{blog.likes} likes</span> <button onClick={() => addLike()}>like</button></div>
+          <div className="likes"><span>{blog.likes} likes</span> <button onClick={() => addLike()}>like</button></div>
           <div>{blog.user ? blog.user.name : ''}</div>
           {(username === blog.user.username || username === 'admin') && <button onClick={() => deleteFunction(blog.id)}>Remove</button>}
         </div>
