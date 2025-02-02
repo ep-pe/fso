@@ -26,6 +26,7 @@ const createAnecdote = (event) => {
           </div>
         </div>
       )}
+      
       <h2>create new</h2>
       <form onSubmit={createAnecdote}>
         <div><input name='anecdote'/></div>
